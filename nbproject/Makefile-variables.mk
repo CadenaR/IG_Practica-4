@@ -9,19 +9,19 @@ CND_DISTDIR=dist
 # Debug configuration
 CND_PLATFORM_Debug=MinGW-Windows
 CND_ARTIFACT_DIR_Debug=dist/Debug/MinGW-Windows
-CND_ARTIFACT_NAME_Debug=practica-4
-CND_ARTIFACT_PATH_Debug=dist/Debug/MinGW-Windows/practica-4
+CND_ARTIFACT_NAME_Debug=ig_practica-4
+CND_ARTIFACT_PATH_Debug=dist/Debug/MinGW-Windows/ig_practica-4
 CND_PACKAGE_DIR_Debug=dist/Debug/MinGW-Windows/package
-CND_PACKAGE_NAME_Debug=practica-4.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/MinGW-Windows/package/practica-4.tar
+CND_PACKAGE_NAME_Debug=igpractica-4.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/MinGW-Windows/package/igpractica-4.tar
 # Release configuration
 CND_PLATFORM_Release=MinGW-Windows
 CND_ARTIFACT_DIR_Release=dist/Release/MinGW-Windows
-CND_ARTIFACT_NAME_Release=practica-4
-CND_ARTIFACT_PATH_Release=dist/Release/MinGW-Windows/practica-4
+CND_ARTIFACT_NAME_Release=ig_practica-4
+CND_ARTIFACT_PATH_Release=dist/Release/MinGW-Windows/ig_practica-4
 CND_PACKAGE_DIR_Release=dist/Release/MinGW-Windows/package
-CND_PACKAGE_NAME_Release=practica-4.tar
-CND_PACKAGE_PATH_Release=dist/Release/MinGW-Windows/package/practica-4.tar
+CND_PACKAGE_NAME_Release=igpractica-4.tar
+CND_PACKAGE_PATH_Release=dist/Release/MinGW-Windows/package/igpractica-4.tar
 #
 # include compiler specific variables
 #
