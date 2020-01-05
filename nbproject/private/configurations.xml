@@ -27,7 +27,7 @@
           <runcommandpicklistitem>"${OUTPUT_PATH}"</runcommandpicklistitem>
         </runcommandpicklist>
         <runcommand>"${OUTPUT_PATH}"</runcommand>
-        <rundir>C:\Users\y700\Documents\NetBeansProjects\Practica-4\IG_Practica-4\dist\Debug\MinGW-Windows</rundir>
+        <rundir>D:\5_ano\Final Project\IG_Practica-4\dist\Debug\MinGW-Windows</rundir>
         <buildfirst>true</buildfirst>
         <terminal-type>0</terminal-type>
         <remove-instrumentation>0</remove-instrumentation>

@@ -22,6 +22,8 @@
         <itemPath>dist/Debug/MinGW-Windows/resources/textures/imgSueloSpecular.png</itemPath>
       </logicalFolder>
     </logicalFolder>
+    <logicalFolder name="shaders" displayName="shaders" projectFiles="true">
+    </logicalFolder>
     <logicalFolder name="src" displayName="src" projectFiles="true">
       <itemPath>src/Model.cpp</itemPath>
       <itemPath>src/Model.h</itemPath>
@@ -30,6 +32,8 @@
       <itemPath>src/Texture.cpp</itemPath>
       <itemPath>src/Texture.h</itemPath>
       <itemPath>src/main.cpp</itemPath>
+    </logicalFolder>
+    <logicalFolder name="textures" displayName="textures" projectFiles="true">
     </logicalFolder>
     <logicalFolder name="TestFiles"
                    displayName="Test Files"
