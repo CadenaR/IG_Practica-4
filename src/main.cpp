@@ -28,21 +28,8 @@ void funSpecial(int key, int x, int y);
 void drawObject(Model* object, glm::vec3 color, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawSuelo (glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawCylinder (glm::mat4 P, glm::mat4 V, glm::mat4 M);
-void drawBlueArm(glm::mat4 P, glm::mat4 V, glm::mat4 M);
-void drawGreenArm(glm::mat4 P, glm::mat4 V, glm::mat4 M);
-void drawGreenArmAux(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawSphere (glm::mat4 P, glm::mat4 V, glm::mat4 M);
-void drawBlueCylinder (glm::mat4 P, glm::mat4 V, glm::mat4 M);
-void drawGreenSphere(glm::mat4 P, glm::mat4 V, glm::mat4 M);
-void drawGreenCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M);
-void drawRedCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M);
-void drawRobot(glm::mat4 P, glm::mat4 V, glm::mat4 M);
-void drawCyanCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M);
-void drawFinger(glm::mat4 P, glm::mat4 V, glm::mat4 M);
-void drawHandAux(glm::mat4 P, glm::mat4 V, glm::mat4 M);
-void drawHand(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void timer(int angle);
-void drawRobotAux(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void keyboard(unsigned char key, int x, int y);
 void zoom(int button, int state, int x, int y);
 void mouse(int x, int y);
@@ -325,7 +312,6 @@ void funDisplay() {
     
  // Dibujamos la escena
     drawSuelo(P,V,I);
-    drawRobotAux(P,V,I);
     
  // Fijamos las luces
     setLights(P,V);
@@ -346,21 +332,6 @@ void drawObject(Model* object, glm::vec3 color, glm::mat4 P, glm::mat4 V, glm::m
     glColor3ub(1.0f,1.0f,1.0f);
 }
 
-void drawRobotAux(glm::mat4 P, glm::mat4 V, glm::mat4 M){
-    //glm::mat4 RO = glm::rotate(I, -1.5707963267f, glm::vec3(0.0f, 1.0f, 0.0f));
-    //glm::mat4 TO = glm::translate(I, glm::vec3(0.0f, 0.0f, 1.0f));
-    drawRobot(P,V,I);
-}
-
-void drawRobot(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
-    glm::mat4 R = glm::rotate(I, (float) (angleB*3.141592654/180), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 TX = glm::translate(I, glm::vec3(moveX, 0.0f, 0.0f));
-    glm::mat4 TZ = glm::translate(I, glm::vec3(0.0f, 0.0f, moveZ));
-    glm::mat4 T1 = glm::translate(I, glm::vec3(0.0f, 0.05f, 0.0f));
-
-    drawCylinder(P,V,M*T1*TX*TZ*R);
-}
-
 void drawSuelo(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
     glm::mat4 S = glm::scale(I, glm::vec3(2.0f,2.0f,2.0f));
@@ -374,102 +345,12 @@ void drawCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     glm::mat4 T = glm::translate(I, glm::vec3(0.0f, 0.2f, 0.0f));
 
     drawObjectTex(cylinder,texBase,P,V,M*S1);
-    drawBlueArm(P,V,M*T*R);
-}
-
-void drawBlueArm(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
-        glm::mat4 T2 = glm::translate(I, glm::vec3(0.0f, 0.0f, 0.25f));
-        glm::mat4 R = glm::rotate(I, 1.5707963267f, glm::vec3(1.0f, 0.0f, 0.0f));
-        
-        drawSphere(P,V,M);
-        drawBlueCylinder(P,V,M*T2*R);
-        drawGreenArmAux(P,V,M);
-}
-
-void drawBlueCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
-    glm::mat4 S3 = glm::scale(I, glm::vec3((0.075/1.0),(0.5/2.0),(0.075/1.0)));
-    drawObjectTex(cylinder,texBrazoAzul,P,V,M*S3);
+    //drawBlueArm(P,V,M*T*R);
 }
 
 void drawSphere(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     glm::mat4 S2 = glm::scale(I, glm::vec3((0.15/2.0),(0.15/2.0),(0.15/2.0)));
     drawObjectTex(sphere,texBrazoAzul,P,V,M*S2); 
-}
-
-void drawGreenArmAux(glm::mat4 P, glm::mat4 V, glm::mat4 M){
-    glm::mat4 RV = glm::rotate(I, (float) (angleV*3.141592654/180), glm::vec3(1.0f, 0.0f, 0.0f));
-    glm::mat4 T4 = glm::translate(I, glm::vec3(0.0f, 0.0f, 0.5f));
-    drawGreenArm(P,V,M*T4*RV);
-}
-
-void drawGreenArm(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
-
-    glm::mat4 R5 = glm::rotate(I, 1.5707963267f, glm::vec3(1.0f, 0.0f, 0.0f));
-    glm::mat4 T = glm::translate(I, glm::vec3(0.0f, 0.0f, 0.25f));
-    glm::mat4 TX = glm::translate(I, glm::vec3(0.0f, 0.0f, desR));
-
-    drawRedCylinder(P,V,M*TX);
-    drawGreenSphere(P,V,M);
-    glDepthMask (GL_FALSE) ;
-    drawGreenCylinder(P,V,M*T*R5);
-    glDepthMask (GL_TRUE) ;
-}
-
-void drawGreenSphere(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
-    glm::mat4 S4 = glm::scale(I, glm::vec3((0.1/2.0),(0.1/2.0),(0.1/2.0)));
-    drawObjectMat(sphere,matEmerald,P,V,M*S4); 
-}
-
-void drawGreenCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
-    glm::mat4 S5 = glm::scale(I, glm::vec3((0.050/1.0),(0.5/2.0),(0.050/1.0)));
-    drawObjectMat(cylinder,matEmeraldTr,P,V,M*S5);
-}
-
-void drawRedCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
-
-    glm::mat4 S5 = glm::scale(I, glm::vec3((0.025/1.0),(0.025/1.0),(0.5/2.0)));
-    glm::mat4 T5 = glm::translate(I, glm::vec3(0.0f, 0.0f, 0.5f));
-    glm::mat4 R5 = glm::rotate(I, 1.5707963267f, glm::vec3(1.0f, 0.0f, 0.0f));
-    drawObjectMat(cylinder,matRuby,P,V,M*T5*S5*R5); 
-    drawHand(P,V,M);
-    
-}
-
-void drawCyanCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
-
-    glm::mat4 S5 = glm::scale(I, glm::vec3((0.1/1.0),(0.05/2.0),(0.1/1.0)));
-    drawObjectTex(cylinder,texBase,P,V,M*S5); 
-
-}
-
-void drawFinger(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
-
-    glm::mat4 S5 = glm::scale(I, glm::vec3((0.01/1.0),(0.1/2.0),(0.01/1.0)));
-
-    drawObjectMat(cylinder,matRuby,P,V,M*S5); 
-}
-
-void drawHandAux(glm::mat4 P, glm::mat4 V, glm::mat4 M){
-  
-    glm::mat4 T1 = glm::translate(I, glm::vec3(0.09f, 0.075f, 0.0f));
-    glm::mat4 T2 = glm::translate(I, glm::vec3(-0.09f, 0.075f, 0.0f));
-    glm::mat4 T3 = glm::translate(I, glm::vec3(0.0f, 0.075f, 0.09f));
-    glm::mat4 T4 = glm::translate(I, glm::vec3(0.0f, 0.075f, -0.09f));
-
-    drawCyanCylinder(P,V,M);
-    drawFinger(P,V,M*T1);
-    drawFinger(P,V,M*T2);
-    drawFinger(P,V,M*T3);
-    drawFinger(P,V,M*T4);
-}
-
-void drawHand(glm::mat4 P, glm::mat4 V, glm::mat4 M){
-    glm::mat4 RH = glm::rotate(I, (float) (angle*3.1415926/180), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 R1 = glm::rotate(I, 1.5707963267f, glm::vec3(0.0f, 0.0f, 1.0f));
-    glm::mat4 R2 = glm::rotate(I, 1.5707963267f, glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 T = glm::translate(I, glm::vec3(0.0f, 0.0f, 0.75f));
-
-    drawHandAux(P,V,M*T*R2*R1*RH);
 }
 
 
