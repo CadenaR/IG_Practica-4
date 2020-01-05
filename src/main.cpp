@@ -27,6 +27,7 @@ void funSpecial(int key, int x, int y);
 
 void drawObject(Model* object, glm::vec3 color, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawSuelo (glm::mat4 P, glm::mat4 V, glm::mat4 M);
+void drawSubmarine(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawCylinder (glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawSphere (glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void timer(int angle);
@@ -312,6 +313,7 @@ void funDisplay() {
     
  // Dibujamos la escena
     drawSuelo(P,V,I);
+    drawSubmarine(P,V,I);
     
  // Fijamos las luces
     setLights(P,V);
@@ -338,18 +340,27 @@ void drawSuelo(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     drawObjectTex(plane,texSuelo,P,V,M*S);
 }
 
+void drawSubmarine(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
+    
+    glm::mat4 S = glm::scale(I, glm::vec3(1.0F,1.0f,0.8f));
+    drawCylinder(P,V,M*S);
+
+}
 void drawCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
-
-    glm::mat4 S1 = glm::scale(I, glm::vec3((0.25/1.0),(0.1/2.0),(0.25/1.0)));
-    glm::mat4 R = glm::rotate(I, (float) (-angleA*3.141592654/180), glm::vec3(1.0f, 0.0f, 0.0f));
     glm::mat4 T = glm::translate(I, glm::vec3(0.0f, 0.2f, 0.0f));
+    glm::mat4 T2 = glm::translate(I, glm::vec3((-1.2/2.0), 0.0f, 0.0f)); 
+    glm::mat4 T3 = glm::translate(I, glm::vec3((1.2/2.0), 0.0f, 0.0f));
+    glm::mat4 R = glm::rotate(I, -1.5707963267f, glm::vec3(0.0f, 0.0f, 1.0f));
+    glm::mat4 S = glm::scale(I, glm::vec3(0.2,(1.2/2.0),0.2));
 
-    drawObjectTex(cylinder,texBase,P,V,M*S1);
-    //drawBlueArm(P,V,M*T*R);
+    drawObjectTex(cylinder,texBase,P,V,M*T*R*S);
+    drawSphere(P,V,M*T2*T);
+    drawSphere(P,V,M*T3*T);
 }
 
 void drawSphere(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
-    glm::mat4 S2 = glm::scale(I, glm::vec3((0.15/2.0),(0.15/2.0),(0.15/2.0)));
+    
+    glm::mat4 S2 = glm::scale(I, glm::vec3((0.2/2.0),(0.2/2.0),(0.2/2.0)));
     drawObjectTex(sphere,texBrazoAzul,P,V,M*S2); 
 }
 

@@ -72,18 +72,16 @@ void main() {
         material.specular  = texture(utextures.specular,vtex);
         material.emissive  = texture(utextures.emissive,vtex);
         material.shininess = utextures.shininess;
-        if(unormals) N = normalize(texture(utextures.normal,vtex).rgb).xyz;
+        if(unormals) N = normalize(2.0f*texture(utextures.normal,vtex).rgb-1.0f).xyz;
     } 
 
     vec3 color =  material.emissive.rgb + ulightG.ambient * material.ambient.rgb;
+
     for(int i=0; i<NLD; i++) color += funDirectional(ulightD[i],material,N,V);
     for(int i=0; i<NLP; i++) color += funPositional (ulightP[i],material,N,V);
     for(int i=0; i<NLF; i++) color += funFocal      (ulightF[i],material,N,V);
      
     outColor = vec4(color,material.diffuse.a);
-
-    //outColor = texture(umaterial.diffuse,vtex);
-    //if(outColor.a < 0.1) discard;
 
 }
 
