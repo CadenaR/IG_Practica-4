@@ -28,7 +28,9 @@ void funSpecial(int key, int x, int y);
 void drawObject(Model* object, glm::vec3 color, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawSuelo (glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawSubmarine(glm::mat4 P, glm::mat4 V, glm::mat4 M);
+void drawBody(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawCylinder (glm::mat4 P, glm::mat4 V, glm::mat4 M);
+void drawFlap(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawSphere (glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void timer(int angle);
 void keyboard(unsigned char key, int x, int y);
@@ -342,11 +344,13 @@ void drawSuelo(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
 void drawSubmarine(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     
-    glm::mat4 S = glm::scale(I, glm::vec3(1.0F,1.0f,0.8f));
+    glm::mat4 S = glm::scale(I, glm::vec3(1.0f,1.0f,0.8f));
+    drawBody(P,V,M*S);
     drawCylinder(P,V,M*S);
+    drawFlap(P,V,M);
 
 }
-void drawCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
+void drawBody(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     glm::mat4 T = glm::translate(I, glm::vec3(0.0f, 0.2f, 0.0f));
     glm::mat4 T2 = glm::translate(I, glm::vec3((-1.2/2.0), 0.0f, 0.0f)); 
     glm::mat4 T3 = glm::translate(I, glm::vec3((1.2/2.0), 0.0f, 0.0f));
@@ -356,6 +360,21 @@ void drawCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     drawObjectTex(cylinder,texBase,P,V,M*T*R*S);
     drawSphere(P,V,M*T2*T);
     drawSphere(P,V,M*T3*T);
+}
+
+void drawFlap(glm::mat4 P, glm::mat4 V, glm::mat4 M){
+    
+    glm::mat4 T = glm::translate(I, glm::vec3((1.3/2.0), 0.2f, 0.0f)); 
+    glm::mat4 R = glm::rotate(I, -1.5707963267f, glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::mat4 S = glm::scale(I, glm::vec3(0.05f,0.3f,0.1f));
+    drawObjectTex(plane,texSuelo,P,V,M*T*S*R);
+}
+
+void drawCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
+    
+    glm::mat4 T = glm::translate(I, glm::vec3(-0.2f, 0.5f, 0.0f)); 
+    glm::mat4 S2 = glm::scale(I, glm::vec3(0.1f,(0.2/2.0),0.1f));
+    drawObjectTex(cylinder,texBrazoAzul,P,V,M*T*S2); 
 }
 
 void drawSphere(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
