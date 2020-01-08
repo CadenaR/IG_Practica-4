@@ -32,6 +32,7 @@ void drawBody(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawHead(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawPeriscope (glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawFlap(glm::mat4 P, glm::mat4 V, glm::mat4 M);
+void drawPropellers(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawSphere (glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void timer(int angle);
@@ -100,6 +101,8 @@ float focal = 1.0f;
    Model* plane;
    Model* cylinder;
    Model* sphere;
+   Model* cylinderNoTop;
+
 // Viewport
    int w = 600;
    int h = 600;
@@ -169,7 +172,9 @@ void funInit() {
  // Modelos
     plane    = new Model("resources/models/plane.obj");
     cylinder = new Model("resources/models/cylinder.obj");
-    sphere = new Model("resources/models/sphere.obj");    
+    sphere = new Model("resources/models/sphere.obj");  
+    cylinderNoTop = new Model("resources/models/cylinderNoTop.obj");
+
     
     // Luz ambiental global
     lightG.ambient      = glm::vec3(0.5f, 0.5f, 0.5f);
@@ -294,7 +299,7 @@ void funDestroy() {
       
    delete shaders;
     
-    delete sphere, plane, cylinder;  
+    delete sphere, plane, cylinder, cylinderNoTop;  
     
     delete texNoEmissive;
     delete texBase.diffuse, texBase.specular, texBase.emissive;
@@ -375,7 +380,7 @@ void drawObject(Model* object, glm::vec3 color, glm::mat4 P, glm::mat4 V, glm::m
 
 void drawOcean(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
-    glm::mat4 S = glm::scale(I, glm::vec3(2.0f,2.0f,2.0f));
+    glm::mat4 S = glm::scale(I, glm::vec3(16.0f,16.0f,16.0f));
     drawObjectTex(plane,texOcean,P,V,M*S);
 }
 
@@ -388,7 +393,7 @@ void drawSubmarine(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     drawHead(P,V,M*S);
     drawFlap(P,V,M);
     drawPeriscope(P,V,M*T*S2);
-  
+    drawPropellers(P,V,M);
 }
 
 void drawBody(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
@@ -422,6 +427,18 @@ void drawPeriscope(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     
     drawObjectTex(cylinder,texPeriscop,P,V,M);
     drawCylinder(P,V,M);
+}
+
+void drawPropellers(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
+    
+    glm::mat4 T = glm::translate(I, glm::vec3(0.3f, 0.1f, 0.2f)); 
+    glm::mat4 T2 = glm::translate(I, glm::vec3(0.3f, 0.1f, -0.2f)); 
+    glm::mat4 S = glm::scale(I, glm::vec3(0.1f,0.1,0.1f));
+    glm::mat4 R = glm::rotate(I, 1.5707963267f*0.2f, glm::vec3(0.0f, 0.0f, 1.0f));
+    glm::mat4 R2 = glm::rotate(I, -1.5707963267f*0.05f, glm::vec3(0.0f, 1.0f, 0.0f));
+
+    drawObjectTex(cylinderNoTop,texPeriscop,P,V,M*T*S*R2*R);
+    drawObjectTex(cylinderNoTop,texPeriscop,P,V,M*T2*S*R2*R);
 }
 
 void drawCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M) {

@@ -4,8 +4,10 @@
     <logicalFolder name="resources" displayName="resources" projectFiles="true">
       <logicalFolder name="models" displayName="models" projectFiles="true">
         <itemPath>dist/Debug/MinGW-Windows/resources/models/cylinder.obj</itemPath>
+        <itemPath>dist/Debug/MinGW-Windows/resources/models/cylinderNoTop.obj</itemPath>
         <itemPath>dist/Debug/MinGW-Windows/resources/models/plane.obj</itemPath>
         <itemPath>dist/Debug/MinGW-Windows/resources/models/sphere.obj</itemPath>
+        <itemPath>dist/Debug/MinGW-Windows/resources/models/triangle.obj</itemPath>
       </logicalFolder>
       <logicalFolder name="shaders" displayName="shaders" projectFiles="true">
         <itemPath>dist/Debug/MinGW-Windows/resources/shaders/fshader.glsl</itemPath>
@@ -85,12 +87,22 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="dist/Debug/MinGW-Windows/resources/models/cylinderNoTop.obj"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="dist/Debug/MinGW-Windows/resources/models/plane.obj"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
       <item path="dist/Debug/MinGW-Windows/resources/models/sphere.obj"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="dist/Debug/MinGW-Windows/resources/models/triangle.obj"
             ex="false"
             tool="3"
             flavor2="0">
@@ -185,12 +197,22 @@
             tool="3"
             flavor2="0">
       </item>
+      <item path="dist/Debug/MinGW-Windows/resources/models/cylinderNoTop.obj"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
       <item path="dist/Debug/MinGW-Windows/resources/models/plane.obj"
             ex="false"
             tool="3"
             flavor2="0">
       </item>
       <item path="dist/Debug/MinGW-Windows/resources/models/sphere.obj"
+            ex="false"
+            tool="3"
+            flavor2="0">
+      </item>
+      <item path="dist/Debug/MinGW-Windows/resources/models/triangle.obj"
             ex="false"
             tool="3"
             flavor2="0">
