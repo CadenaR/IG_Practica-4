@@ -33,6 +33,7 @@ void drawHead(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawPeriscope (glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawFlap(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawPropellers(glm::mat4 P, glm::mat4 V, glm::mat4 M);
+void drawHelices(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawSphere (glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void timer(int angle);
@@ -433,12 +434,26 @@ void drawPropellers(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     
     glm::mat4 T = glm::translate(I, glm::vec3(0.3f, 0.1f, 0.2f)); 
     glm::mat4 T2 = glm::translate(I, glm::vec3(0.3f, 0.1f, -0.2f)); 
-    glm::mat4 S = glm::scale(I, glm::vec3(0.1f,0.1,0.1f));
+    glm::mat4 S = glm::scale(I, glm::vec3(0.1f,0.1f,0.1f));
     glm::mat4 R = glm::rotate(I, 1.5707963267f*0.2f, glm::vec3(0.0f, 0.0f, 1.0f));
     glm::mat4 R2 = glm::rotate(I, -1.5707963267f*0.05f, glm::vec3(0.0f, 1.0f, 0.0f));
 
     drawObjectTex(cylinderNoTop,texPeriscop,P,V,M*T*S*R2*R);
     drawObjectTex(cylinderNoTop,texPeriscop,P,V,M*T2*S*R2*R);
+    drawHelices(P,V,M*T*S*R);
+    drawHelices(P,V,M*T2*S*R);
+}
+
+void drawHelices(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
+    
+    glm::mat4 S = glm::scale(I, glm::vec3(0.1f,0.5f,0.5f));
+    glm::mat4 T = glm::translate(I, glm::vec3(0.0f, -0.1f, -0.05f)); 
+    glm::mat4 R = glm::rotate(I, 1.5707963267f*0.1f, glm::vec3(0.0f, 0.0f, 1.0f));
+    glm::mat4 S2 = glm::scale(I, glm::vec3(0.1f,0.1f,0.1f));
+
+    drawObjectTex(plane,texPeriscop,P,V,M*T*S);
+    drawObjectTex(sphere,texPeriscop,P,V,M*T*S2);
+
 }
 
 void drawCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
