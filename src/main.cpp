@@ -48,13 +48,12 @@ void setLights(glm::mat4 P, glm::mat4 V);
 
 int angle = 0;
 float desPeris = 0.0f;
-
+float moveX = 0.0f;
+float moveZ = 0.0f;
 
 int angleB = 0;
 int angleA = 0;
 int angleV = 0;
-float moveX = 0;
-float moveZ = 0;
 float alphaX = 0;
 float alphaY = 0;
 float newX = 0;
@@ -359,7 +358,7 @@ void funDisplay() {
     
  // Dibujamos la escena
     drawOcean(P,V,I);
-    drawSubmarine(P,V,I);
+    drawSubmarineAux(P,V,I);
     
  // Fijamos las luces
     setLights(P,V);
@@ -388,8 +387,8 @@ void drawOcean(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
 void drawSubmarineAux(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     
-    glm::mat4 TX = glm::translate(I, glm::vec3(moveX, 0.0f, 0.0f));
-    glm::mat4 TZ = glm::translate(I, glm::vec3(0.0f, 0.0f, moveZ));
+    glm::mat4 TX = glm::translate(I, glm::vec3(moveZ, 0.0f, 0.0f));
+    glm::mat4 TZ = glm::translate(I, glm::vec3(0.0f, 0.0f, moveX));
     drawSubmarine(P,V,M*TX*TZ);
 }
 
