@@ -670,14 +670,14 @@ void funSpecial(int key, int x, int y) {
            moveZ  = 0.0f;
            break;
     }
-    if(moveX>1.75)
-               moveX=1.75f;
-           else if(moveX<-1.75f)
-               moveX=-1.75f;
-           if(moveZ>1.75f)
-               moveZ=1.75f;
-           else if(moveZ<-1.75f)
-               moveZ=-1.75f;
+    if(moveX>16.0f)
+               moveX=16.0f;
+           else if(moveX<-16.0f)
+               moveX=-16.0f;
+           if(moveZ>16.0f)
+               moveZ=16.0f;
+           else if(moveZ<-16.0f)
+               moveZ=-16.0f;
            
     glutPostRedisplay();
 }
