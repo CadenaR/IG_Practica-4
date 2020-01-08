@@ -450,8 +450,9 @@ void drawHelices(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     glm::mat4 T = glm::translate(I, glm::vec3(0.0f, -0.1f, -0.05f)); 
     glm::mat4 R = glm::rotate(I, 1.5707963267f*0.1f, glm::vec3(0.0f, 0.0f, 1.0f));
     glm::mat4 S2 = glm::scale(I, glm::vec3(0.1f,0.1f,0.1f));
+    glm::mat4 RM = glm::rotate(I, (float) (angle*3.141592654/180), glm::vec3(1.0f, 0.0f, 0.0f));
 
-    drawObjectTex(plane,texPeriscop,P,V,M*T*S);
+    drawObjectTex(plane,texPeriscop,P,V,M*T*S*RM);
     drawObjectTex(sphere,texPeriscop,P,V,M*T*S2);
 
 }
@@ -642,7 +643,7 @@ void mouse(int x, int y){
 
 void timer(int ignore)
 {
-    angle += 5;
+    angle += 7;
     glutPostRedisplay();
     glutTimerFunc(30, timer, 0);
 }
