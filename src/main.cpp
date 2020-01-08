@@ -24,9 +24,9 @@ void funDestroy();
 void funReshape(int w, int h);
 void funDisplay();
 void funSpecial(int key, int x, int y);
-
 void drawObject(Model* object, glm::vec3 color, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawOcean (glm::mat4 P, glm::mat4 V, glm::mat4 M);
+void drawSubmarineAux(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawSubmarine(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawBody(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawHead(glm::mat4 P, glm::mat4 V, glm::mat4 M);
@@ -47,10 +47,12 @@ void drawObjectTex(Model *object, Textures textures, glm::mat4 P, glm::mat4 V, g
 void setLights(glm::mat4 P, glm::mat4 V);
 
 int angle = 0;
+float desPeris = 0.0f;
+
+
 int angleB = 0;
 int angleA = 0;
 int angleV = 0;
-float desR = 0;
 float moveX = 0;
 float moveZ = 0;
 float alphaX = 0;
@@ -141,7 +143,6 @@ int main(int argc, char** argv) {
  // Configuración CallBacks
     glutReshapeFunc(funReshape);
     glutDisplayFunc(funDisplay);
-    glutSpecialFunc(funSpecial);
     glutTimerFunc(30, timer, 0);
     glutMouseFunc(zoom);
     glutKeyboardFunc(keyboard);
@@ -385,11 +386,19 @@ void drawOcean(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     drawObjectTex(plane,texOcean,P,V,M*S);
 }
 
+void drawSubmarineAux(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
+    
+    glm::mat4 TX = glm::translate(I, glm::vec3(moveX, 0.0f, 0.0f));
+    glm::mat4 TZ = glm::translate(I, glm::vec3(0.0f, 0.0f, moveZ));
+    drawSubmarine(P,V,M*TX*TZ);
+}
+
 void drawSubmarine(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
    
     glm::mat4 S = glm::scale(I, glm::vec3(1.0f,1.0f,0.8f));
     glm::mat4 S2 = glm::scale(I, glm::vec3(0.01f,0.1f,0.01f));
     glm::mat4 T = glm::translate(I, glm::vec3(-0.25f, 0.6f, 0.0f));
+    
     drawBody(P,V,M*S);
     drawHead(P,V,M*S);
     drawFlap(P,V,M);
@@ -426,7 +435,8 @@ void drawHead(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
 void drawPeriscope(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     
-    drawObjectTex(cylinder,texPeriscop,P,V,M);
+    glm::mat4 T = glm::translate(I, glm::vec3(0.0f, desPeris, 0.0f));
+    drawObjectTex(cylinder,texPeriscop,P,V,M*T);
     drawCylinder(P,V,M);
 }
 
@@ -574,14 +584,14 @@ void keyboard(unsigned char key, int x, int y){
             angleV += 5;
             }
             break;
-        case 'R':
-            if(desR>-0.25){
-            desR -= 0.01;
+        case 'P':
+            if(desPeris>-0.45){
+            desPeris -= 0.05;
             }
             break;
-        case 'r':
-            if(desR<0.25){
-            desR += 0.01;
+        case 'p':
+            if(desPeris<0.45){
+            desPeris += 0.05;
             }
             break;
         case 's':
@@ -598,7 +608,7 @@ void keyboard(unsigned char key, int x, int y){
                 lightP[0].ambient.z -= 0.1f;
             }
             break;
-        case 'p': 
+        case 'l': 
             rotp += 5;
             break;
         case 'f':
@@ -652,10 +662,10 @@ void timer(int ignore)
 void funSpecial(int key, int x, int y) {
        
     switch(key) {
-        case GLUT_KEY_UP:    moveZ += 0.05f;   break;
-        case GLUT_KEY_DOWN:  moveZ -= 0.05f;   break;
-        case GLUT_KEY_LEFT:  moveX += 0.05f;   break;
-        case GLUT_KEY_RIGHT: moveX -= 0.05f;   break;
+        case GLUT_KEY_UP:    moveZ += 0.5f;   break;
+        case GLUT_KEY_DOWN:  moveZ -= 0.5f;   break;
+        case GLUT_KEY_LEFT:  moveX += 0.5f;   break;
+        case GLUT_KEY_RIGHT: moveX -= 0.5f;   break;
         default:
            moveX  = 0.0f;   
            moveZ  = 0.0f;
