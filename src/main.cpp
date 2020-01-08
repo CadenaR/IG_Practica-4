@@ -26,7 +26,7 @@ void funDisplay();
 void funSpecial(int key, int x, int y);
 
 void drawObject(Model* object, glm::vec3 color, glm::mat4 P, glm::mat4 V, glm::mat4 M);
-void drawSuelo (glm::mat4 P, glm::mat4 V, glm::mat4 M);
+void drawOcean (glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawSubmarine(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawBody(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawHead(glm::mat4 P, glm::mat4 V, glm::mat4 M);
@@ -84,6 +84,12 @@ float focal = 1.0f;
    Textures texLuces;
    Textures texCube;
    Textures texWindow;
+   
+   Textures texBodySub;
+   Textures texSphereSub;
+   Textures texOcean;
+   Textures texPeriscop;
+   Textures texTopSphere;
 
 
   
@@ -253,6 +259,35 @@ void funInit() {
     texLuces.normal    = NULL;  
     texLuces.shininess = 50.0f;
    
+    texBodySub.diffuse   = new Texture("resources/textures/body.png");   
+    texBodySub.specular  = texBodySub.diffuse;
+    texBodySub.emissive  = texNoEmissive;
+    texBodySub.normal    = NULL;  
+    texBodySub.shininess = 50.0f;
+    
+    texSphereSub.diffuse   = new Texture("resources/textures/metalTexture.png");   
+    texSphereSub.specular  = texNoEmissive;
+    texSphereSub.emissive  = texNoEmissive;
+    texSphereSub.normal    = NULL;  
+    texSphereSub.shininess = 50.0f;
+    
+    texOcean.diffuse   = new Texture("resources/textures/ocean.png");   
+    texOcean.specular  = texOcean.diffuse;
+    texOcean.emissive  = texNoEmissive;
+    texOcean.normal    = NULL;  
+    texOcean.shininess = 50.0f;
+    
+    texPeriscop.diffuse   = new Texture("resources/textures/metalTexture.png");   
+    texPeriscop.specular  = texPeriscop.diffuse;
+    texPeriscop.emissive  = texNoEmissive;
+    texPeriscop.normal    = NULL;  
+    texPeriscop.shininess = 50.0f;
+    
+    texTopSphere.diffuse   = new Texture("resources/textures/topsphere.png");   
+    texTopSphere.specular  = texLuces.diffuse;
+    texTopSphere.emissive  = texNoEmissive;
+    texTopSphere.normal    = NULL;  
+    texTopSphere.shininess = 50.0f;
 }
 
 void funDestroy() {
@@ -316,7 +351,7 @@ void funDisplay() {
     glm::mat4 V = glm::lookAt(pos, lookat, up);   
     
  // Dibujamos la escena
-    drawSuelo(P,V,I);
+    drawOcean(P,V,I);
     drawSubmarine(P,V,I);
     
  // Fijamos las luces
@@ -338,10 +373,10 @@ void drawObject(Model* object, glm::vec3 color, glm::mat4 P, glm::mat4 V, glm::m
     glColor3ub(1.0f,1.0f,1.0f);
 }
 
-void drawSuelo(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
+void drawOcean(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
     glm::mat4 S = glm::scale(I, glm::vec3(2.0f,2.0f,2.0f));
-    drawObjectTex(plane,texSuelo,P,V,M*S);
+    drawObjectTex(plane,texOcean,P,V,M*S);
 }
 
 void drawSubmarine(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
@@ -363,7 +398,7 @@ void drawBody(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     glm::mat4 R = glm::rotate(I, -1.5707963267f, glm::vec3(0.0f, 0.0f, 1.0f));
     glm::mat4 S = glm::scale(I, glm::vec3(0.2,(1.2/2.0),0.2));
 
-    drawObjectTex(cylinder,texBase,P,V,M*T*R*S);
+    drawObjectTex(cylinder,texBodySub,P,V,M*T*R*S);
     drawSphere(P,V,M*T2*T);
     drawSphere(P,V,M*T3*T);
 }
@@ -380,12 +415,12 @@ void drawHead(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     
     glm::mat4 T = glm::translate(I, glm::vec3(-0.2f, 0.5f, 0.0f)); 
     glm::mat4 S2 = glm::scale(I, glm::vec3(0.1f,(0.2/2.0),0.1f));
-    drawObjectTex(cylinder,texBrazoAzul,P,V,M*T*S2); 
+    drawObjectTex(cylinder,texTopSphere,P,V,M*T*S2); 
 }
 
 void drawPeriscope(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     
-    drawObjectTex(cylinder,texBrazoAzul,P,V,M);
+    drawObjectTex(cylinder,texPeriscop,P,V,M);
     drawCylinder(P,V,M);
 }
 
@@ -393,13 +428,13 @@ void drawCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     
     glm::mat4 T = glm::translate(I, glm::vec3(0.0f, 3.0f, 0.0f)); 
     glm::mat4 R = glm::rotate(I, -1.5707963267f, glm::vec3(0.0f, 0.0f, 1.0f));
-    drawObjectTex(cylinder,texBrazoAzul,P,V,M*T); 
+    drawObjectTex(cylinder,texPeriscop,P,V,M*T); 
 }
 
 void drawSphere(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     
     glm::mat4 S2 = glm::scale(I, glm::vec3((0.2/2.0),(0.2/2.0),(0.2/2.0)));
-    drawObjectTex(sphere,texBrazoAzul,P,V,M*S2); 
+    drawObjectTex(sphere,texSphereSub,P,V,M*S2); 
 }
 
 
