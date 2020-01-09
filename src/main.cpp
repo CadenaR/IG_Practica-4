@@ -50,6 +50,7 @@ int angle = 0;
 float desPeris = 0.0f;
 float moveX = 0.0f;
 float moveZ = 0.0f;
+int angleD = 0;
 
 int angleB = 0;
 int angleA = 0;
@@ -387,9 +388,12 @@ void drawOcean(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
 void drawSubmarineAux(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     
-    glm::mat4 TX = glm::translate(I, glm::vec3(moveZ, 0.0f, 0.0f));
+    glm::mat4 TX = glm::translate(I, glm::vec3(moveZ*sin(angleD*3.141592654/180), 0.0f, moveZ*cos(angleD*3.141592654/180)));
     glm::mat4 TZ = glm::translate(I, glm::vec3(0.0f, 0.0f, moveX));
-    drawSubmarine(P,V,M*TX*TZ);
+    glm::mat4 RM = glm::rotate(I, (float) (angleD*3.141592654/180), glm::vec3(0.0f, 1.0f, 0.0f));
+    glm::mat4 RM2 = glm::rotate(I, (float) (angleA*3.141592654/180), glm::vec3(1.0f, 0.0f, 0.0f));
+
+    drawSubmarine(P,V,M*TX*RM2*RM);
 }
 
 void drawSubmarine(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
@@ -564,23 +568,15 @@ void keyboard(unsigned char key, int x, int y){
             angleB += 5;
             break;
         case 'A':
-            if(angleA>0){
-            angleA -= 5;
-            }
-            break;
         case 'a':
-            if(angleA<180){
-            angleA += 5;
+            if(angleA<30){
+            angleA += 2.5;
             }
             break;
-        case 'V':
-            if(angleV>-90){
-            angleV -= 5;
-            }
-            break;
-        case 'v':
-            if(angleV<90){
-            angleV += 5;
+        case 'z':
+        case 'Z':
+            if(angleA>-30){
+            angleA -= 2.5;
             }
             break;
         case 'P':
@@ -663,11 +659,12 @@ void funSpecial(int key, int x, int y) {
     switch(key) {
         case GLUT_KEY_UP:    moveZ += 0.5f;   break;
         case GLUT_KEY_DOWN:  moveZ -= 0.5f;   break;
-        case GLUT_KEY_LEFT:  moveX += 0.5f;   break;
-        case GLUT_KEY_RIGHT: moveX -= 0.5f;   break;
+        case GLUT_KEY_LEFT:  angleD += 5;   break;
+        case GLUT_KEY_RIGHT: angleD -= 5;   break;
         default:
            moveX  = 0.0f;   
            moveZ  = 0.0f;
+           angleD = 0;
            break;
     }
     if(moveX>16.0f)
