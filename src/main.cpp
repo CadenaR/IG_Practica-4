@@ -51,6 +51,8 @@ float desPeris = 0.0f;
 float moveX = 0.0f;
 float moveZ = 0.0f;
 int angleD = 0;
+float speed = 0.0f;
+bool setSpeed = false;
 
 int angleB = 0;
 int angleA = 0;
@@ -105,6 +107,7 @@ float focal = 1.0f;
    Model* cylinder;
    Model* sphere;
    Model* cylinderNoTop;
+   Model* cube;
 
 // Viewport
    int w = 600;
@@ -124,7 +127,7 @@ int main(int argc, char** argv) {
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
     glutInitWindowSize(600,600);
     glutInitWindowPosition(50,50);
-    glutCreateWindow("Pratica 1");
+    glutCreateWindow("Pratica 4");
     
  // Inicializamos GLEW
     glewExperimental = GL_TRUE;
@@ -176,6 +179,7 @@ void funInit() {
     cylinder = new Model("resources/models/cylinder.obj");
     sphere = new Model("resources/models/sphere.obj");  
     cylinderNoTop = new Model("resources/models/cylinderNoTop.obj");
+    cube = new Model("resources/models/cube.obj");
 
     
     // Luz ambiental global
@@ -382,18 +386,17 @@ void drawObject(Model* object, glm::vec3 color, glm::mat4 P, glm::mat4 V, glm::m
 
 void drawOcean(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
-    glm::mat4 S = glm::scale(I, glm::vec3(16.0f,16.0f,16.0f));
-    drawObjectTex(plane,texOcean,P,V,M*S);
+    glm::mat4 S = glm::scale(I, glm::vec3(2.5f,2.5f,2.5f));
+    drawObjectTex(sphere,texOcean,P,V,M*S);
 }
 
 void drawSubmarineAux(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     
-    glm::mat4 TX = glm::translate(I, glm::vec3(moveZ*sin(angleD*3.141592654/180), 0.0f, moveZ*cos(angleD*3.141592654/180)));
-    glm::mat4 TZ = glm::translate(I, glm::vec3(0.0f, 0.0f, moveX));
+    glm::mat4 T = glm::translate(I, glm::vec3(moveX, 0.0f, moveZ));
     glm::mat4 RM = glm::rotate(I, (float) (angleD*3.141592654/180), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 RM2 = glm::rotate(I, (float) (angleA*3.141592654/180), glm::vec3(1.0f, 0.0f, 0.0f));
 
-    drawSubmarine(P,V,M*TX*RM2*RM);
+    drawSubmarine(P,V,M*T*RM2*RM);
 }
 
 void drawSubmarine(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
@@ -532,7 +535,7 @@ void setLights(glm::mat4 P, glm::mat4 V) {
 }
 
 
-void move(int key, int x, int y){
+/*void move(int key, int x, int y){
     if(key==GLUT_KEY_UP)     
         moveX += 0.05;
     else if(key == GLUT_KEY_DOWN)
@@ -541,7 +544,7 @@ void move(int key, int x, int y){
         moveZ -= 0.05;
     else if(key == GLUT_KEY_RIGHT)
         moveZ += 0.05;
-}
+}*/
 
 void zoom(int button, int state, int x, int y){
     if (button == 3)//
@@ -655,26 +658,29 @@ void timer(int ignore)
 
 
 void funSpecial(int key, int x, int y) {
-       
+    
     switch(key) {
-        case GLUT_KEY_UP:    moveZ += 0.5f;   break;
-        case GLUT_KEY_DOWN:  moveZ -= 0.5f;   break;
+        // movimiento del submarino en la dirección que mira
+        case GLUT_KEY_UP: 
+            moveX += speed*sin((angleD-90)*3.141592654/180);
+            moveZ += speed*cos((angleD-90)*3.141592654/180);
+            break;
+        case GLUT_KEY_DOWN: 
+            moveX -= speed*sin((angleD-90)*3.141592654/180);
+            moveZ -= speed*cos((angleD-90)*3.141592654/180);
+            break;
         case GLUT_KEY_LEFT:  angleD += 5;   break;
         case GLUT_KEY_RIGHT: angleD -= 5;   break;
-        default:
-           moveX  = 0.0f;   
-           moveZ  = 0.0f;
-           angleD = 0;
-           break;
+        default: break;
     }
-    if(moveX>16.0f)
-               moveX=16.0f;
-           else if(moveX<-16.0f)
-               moveX=-16.0f;
-           if(moveZ>16.0f)
-               moveZ=16.0f;
-           else if(moveZ<-16.0f)
-               moveZ=-16.0f;
+    if(moveX>4.0f)
+               moveX=4.0f;
+           else if(moveX<-4.0f)
+               moveX=-4.0f;
+           if(moveZ>4.0f)
+               moveZ=4.0f;
+           else if(moveZ<-4.0f)
+               moveZ=-4.0f;
            
     glutPostRedisplay();
 }
