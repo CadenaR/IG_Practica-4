@@ -51,7 +51,7 @@ float desPeris = 0.0f;
 float moveX = 0.0f;
 float moveZ = 0.0f;
 int angleD = 0;
-float speed = 0.0f;
+float speed = 0.015f;
 bool setSpeed = false;
 
 int angleB = 0;
@@ -271,7 +271,7 @@ void funInit() {
     texLuces.shininess = 50.0f;
    
     texBodySub.diffuse   = new Texture("resources/textures/body.png");   
-    texBodySub.specular  = texBodySub.diffuse;
+    texBodySub.specular  = texNoEmissive;
     texBodySub.emissive  = texNoEmissive;
     texBodySub.normal    = NULL;  
     texBodySub.shininess = 50.0f;
