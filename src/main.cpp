@@ -446,15 +446,21 @@ void drawFlap(glm::mat4 P, glm::mat4 V, glm::mat4 M){
     glm::mat4 T = glm::translate(I, glm::vec3((1.3/2.0), 0.2f, 0.0f)); 
     glm::mat4 R = glm::rotate(I, -1.5707963267f, glm::vec3(1.0f, 0.0f, 0.0f));
     glm::mat4 S = glm::scale(I, glm::vec3(0.05f,0.3f,0.1f));
+    glm::mat4 S2 = glm::scale(I, glm::vec3(0.05f,0.3f,0.2f));
     glm::mat4 RM = glm::rotate(I, (float) (flapAngle*3.141592654/180), glm::vec3(0.0f, 0.0f, 1.0f));
     
     if(textureFlap == 0){
+    drawObjectTex(plane,texFlap,P,V,M*T*S2);
     drawObjectTex(plane,texFlap,P,V,M*T*S*R*RM);
+
     }
     if(textureFlap == 1){
-    drawObjectTex(plane,texFlap2,P,V,M*T*S*R*RM);
+    drawObjectTex(plane,texFlap2,P,V,M*T*S2);
+    drawObjectTex(plane,texFlap,P,V,M*T*S*R*RM);
+
     }
     if(textureFlap == 2){
+    drawObjectTex(plane,texFlap,P,V,M*T*S2);
     drawObjectTex(plane,texBrazoAzul,P,V,M*T*S*R*RM);
     }
 }
