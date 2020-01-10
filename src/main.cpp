@@ -66,6 +66,7 @@ float newAngleY = 0;
 float fovy = 30.0f;
 float rotp = 90.0f;
 float focal = 1.0f;
+float textureFlap = 2;
 
 // Luces
    #define  NLD 1
@@ -94,6 +95,8 @@ float focal = 1.0f;
    Textures texBodySub;
    Textures texSphereSub;
    Textures texOcean;
+   Textures texFlap;
+   Textures texFlap2;
    Textures texPeriscop;
    Textures texTopSphere;
 
@@ -276,6 +279,19 @@ void funInit() {
     texBodySub.normal    = NULL;  
     texBodySub.shininess = 50.0f;
     
+    texFlap.diffuse   = new Texture("resources/textures/flaptexture.jpg");   
+    texFlap.specular  = texNoEmissive;
+    texFlap.emissive  = texNoEmissive;
+    texFlap.normal    = NULL;  
+    texFlap.shininess = 50.0f;
+    
+    texFlap2.diffuse   = new Texture("resources/textures/metaltexture.png");   
+    texFlap2.specular  = texNoEmissive;
+    texFlap2.emissive  = texNoEmissive;
+    texFlap2.normal    = NULL;  
+    texFlap2.shininess = 50.0f;
+    
+    
     texSphereSub.diffuse   = new Texture("resources/textures/metalTexture.png");   
     texSphereSub.specular  = texNoEmissive;
     texSphereSub.emissive  = texNoEmissive;
@@ -431,7 +447,16 @@ void drawFlap(glm::mat4 P, glm::mat4 V, glm::mat4 M){
     glm::mat4 R = glm::rotate(I, -1.5707963267f, glm::vec3(1.0f, 0.0f, 0.0f));
     glm::mat4 S = glm::scale(I, glm::vec3(0.05f,0.3f,0.1f));
     glm::mat4 RM = glm::rotate(I, (float) (flapAngle*3.141592654/180), glm::vec3(0.0f, 0.0f, 1.0f));
-    drawObjectTex(plane,texSuelo,P,V,M*T*S*R*RM);
+    
+    if(textureFlap == 0){
+    drawObjectTex(plane,texFlap,P,V,M*T*S*R*RM);
+    }
+    if(textureFlap == 1){
+    drawObjectTex(plane,texFlap2,P,V,M*T*S*R*RM);
+    }
+    if(textureFlap == 2){
+    drawObjectTex(plane,texBrazoAzul,P,V,M*T*S*R*RM);
+    }
 }
 
 void drawHead(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
@@ -584,11 +609,18 @@ void keyboard(unsigned char key, int x, int y){
             angleA += 2.5;
             }
             break;
+     
         case 'z':
         case 'Z':
             if(angleA>-30){
             angleA -= 2.5;
             }
+            break;
+        case 't':
+        case 'T':
+            if(textureFlap<2)
+            textureFlap +=1;
+            else textureFlap = 0;
             break;
         case 'P':
             if(desPeris>-0.45){
