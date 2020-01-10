@@ -55,6 +55,7 @@ int angleD = 0;
 float speed = 0.015f;
 bool setSpeed = false;
 int flapAngle = 0;
+int hflapAngle = 0;
 int angleB = 0;
 int angleA = 0;
 float alphaX = 0;
@@ -448,19 +449,20 @@ void drawFlap(glm::mat4 P, glm::mat4 V, glm::mat4 M){
     glm::mat4 S = glm::scale(I, glm::vec3(0.05f,0.3f,0.1f));
     glm::mat4 S2 = glm::scale(I, glm::vec3(0.05f,0.3f,0.2f));
     glm::mat4 RM = glm::rotate(I, (float) (flapAngle*3.141592654/180), glm::vec3(0.0f, 0.0f, 1.0f));
-    
+    glm::mat4 RMH = glm::rotate(I, (float) (hflapAngle*3.141592654/180), glm::vec3(0.0f, 0.0f, 1.0f));
+
     if(textureFlap == 0){
-    drawObjectTex(plane,texFlap,P,V,M*T*S2);
+    drawObjectTex(plane,texFlap,P,V,M*T*S2*RMH);
     drawObjectTex(plane,texFlap,P,V,M*T*S*R*RM);
 
     }
     if(textureFlap == 1){
-    drawObjectTex(plane,texFlap2,P,V,M*T*S2);
+    drawObjectTex(plane,texFlap2,P,V,M*T*S2*RMH);
     drawObjectTex(plane,texFlap,P,V,M*T*S*R*RM);
 
     }
     if(textureFlap == 2){
-    drawObjectTex(plane,texFlap,P,V,M*T*S2);
+    drawObjectTex(plane,texFlap,P,V,M*T*S2*RMH);
     drawObjectTex(plane,texBrazoAzul,P,V,M*T*S*R*RM);
     }
 }
@@ -573,18 +575,6 @@ void setLights(glm::mat4 P, glm::mat4 V) {
     
 }
 
-
-/*void move(int key, int x, int y){
-    if(key==GLUT_KEY_UP)     
-        moveX += 0.05;
-    else if(key == GLUT_KEY_DOWN)
-        moveX -= 0.05;
-    else if(key == GLUT_KEY_LEFT)
-        moveZ -= 0.05;
-    else if(key == GLUT_KEY_RIGHT)
-        moveZ += 0.05;
-}*/
-
 void zoom(int button, int state, int x, int y){
     if (button == 3)//
   { 
@@ -611,13 +601,14 @@ void keyboard(unsigned char key, int x, int y){
             break;
         case 'A':
         case 'a':
+            hflapAngle = 12;
             if(angleA<30){
             angleA += 2.5;
             }
             break;
-     
         case 'z':
         case 'Z':
+            hflapAngle = -12;
             if(angleA>-30){
             angleA -= 2.5;
             }
@@ -698,12 +689,21 @@ void mouse(int x, int y){
 void timer(int ignore)
 {
     angle += 7;
+    
     if(flapAngle>0){
     flapAngle -= 1;
     }
     if(flapAngle<0){
     flapAngle += 1;
     }
+    
+     if(hflapAngle>0){
+    hflapAngle -= 1;
+    }
+    if(hflapAngle<0){
+    hflapAngle += 1;
+    }
+    
     glutPostRedisplay();
     glutTimerFunc(30, timer, 0);
 }
