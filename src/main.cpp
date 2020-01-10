@@ -36,6 +36,7 @@ void drawPropellers(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawHelices(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawSphere (glm::mat4 P, glm::mat4 V, glm::mat4 M);
+void drawSphereMat(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void timer(int angle);
 void keyboard(unsigned char key, int x, int y);
 void zoom(int button, int state, int x, int y);
@@ -406,10 +407,9 @@ void drawSubmarine(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     glm::mat4 T = glm::translate(I, glm::vec3(-0.25f, 0.6f, 0.0f));
     
 
-    
+    drawFlap(P,V,M);
     drawBody(P,V,M*S);
     drawHead(P,V,M*S);
-    drawFlap(P,V,M);
     drawPeriscope(P,V,M*T*S2);
     drawPropellers(P,V,M);
 }
@@ -423,7 +423,7 @@ void drawBody(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
     drawObjectTex(cylinder,texBodySub,P,V,M*T*R*S);
     drawSphere(P,V,M*T2*T);
-    drawSphere(P,V,M*T3*T);
+    drawSphereMat(P,V,M*T3*T);
 }
 
 void drawFlap(glm::mat4 P, glm::mat4 V, glm::mat4 M){
@@ -486,6 +486,12 @@ void drawSphere(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     
     glm::mat4 S2 = glm::scale(I, glm::vec3((0.2/2.0),(0.2/2.0),(0.2/2.0)));
     drawObjectTex(sphere,texSphereSub,P,V,M*S2); 
+}
+
+void drawSphereMat(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
+    
+    glm::mat4 S2 = glm::scale(I, glm::vec3((0.2/2.0),(0.2/2.0),(0.2/2.0)));
+    drawObjectMat(sphere,matEmeraldTr,P,V,M*S2); 
 }
 
 
