@@ -54,10 +54,9 @@ float moveZ = 0.0f;
 int angleD = 0;
 float speed = 0.015f;
 bool setSpeed = false;
-
+int flapAngle = 0;
 int angleB = 0;
 int angleA = 0;
-int angleV = 0;
 float alphaX = 0;
 float alphaY = 0;
 float newX = 0;
@@ -431,7 +430,8 @@ void drawFlap(glm::mat4 P, glm::mat4 V, glm::mat4 M){
     glm::mat4 T = glm::translate(I, glm::vec3((1.3/2.0), 0.2f, 0.0f)); 
     glm::mat4 R = glm::rotate(I, -1.5707963267f, glm::vec3(1.0f, 0.0f, 0.0f));
     glm::mat4 S = glm::scale(I, glm::vec3(0.05f,0.3f,0.1f));
-    drawObjectTex(plane,texSuelo,P,V,M*T*S*R);
+    glm::mat4 RM = glm::rotate(I, (float) (flapAngle*3.141592654/180), glm::vec3(0.0f, 0.0f, 1.0f));
+    drawObjectTex(plane,texSuelo,P,V,M*T*S*R*RM);
 }
 
 void drawHead(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
@@ -660,6 +660,12 @@ void mouse(int x, int y){
 void timer(int ignore)
 {
     angle += 7;
+    if(flapAngle>0){
+    flapAngle -= 1;
+    }
+    if(flapAngle<0){
+    flapAngle += 1;
+    }
     glutPostRedisplay();
     glutTimerFunc(30, timer, 0);
 }
@@ -677,8 +683,14 @@ void funSpecial(int key, int x, int y) {
             moveX -= speed*sin((angleD-90)*3.141592654/180);
             moveZ -= speed*cos((angleD-90)*3.141592654/180);
             break;
-        case GLUT_KEY_LEFT:  angleD += 5;   break;
-        case GLUT_KEY_RIGHT: angleD -= 5;   break;
+        case GLUT_KEY_LEFT: 
+            flapAngle = -12;
+            angleD += 5;   
+            break;
+        case GLUT_KEY_RIGHT: 
+            flapAngle = 12;
+            angleD -= 5;   
+            break;
         default: break;
     }
     if(moveX>4.0f)
