@@ -50,6 +50,7 @@ void setLights(glm::mat4 P, glm::mat4 V);
 int angle = 0;
 float desPeris = 0.0f;
 float moveX = 0.0f;
+float moveY = 0.0f;
 float moveZ = 0.0f;
 int angleD = 0;
 float speed = 0.015f;
@@ -409,9 +410,9 @@ void drawOcean(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
 void drawSubmarineAux(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     
-    glm::mat4 T = glm::translate(I, glm::vec3(moveX, 0.0f, moveZ));
+    glm::mat4 T = glm::translate(I, glm::vec3(moveX, moveY, moveZ));
     glm::mat4 RM = glm::rotate(I, (float) (angleD*3.141592654/180), glm::vec3(0.0f, 1.0f, 0.0f));
-    glm::mat4 RM2 = glm::rotate(I, (float) (angleA*3.141592654/180), glm::vec3(1.0f, 0.0f, 0.0f));
+    glm::mat4 RM2 = glm::rotate(I, (float) (angleA*3.141592654/180), glm::vec3(0.0f, 0.0f, 1.0f));
 
     drawSubmarine(P,V,M*T*RM2*RM);
 }
@@ -602,15 +603,16 @@ void keyboard(unsigned char key, int x, int y){
         case 'A':
         case 'a':
             hflapAngle = 12;
-            if(angleA<30){
-            angleA += 2.5;
+            if(angleA>-30){
+            angleA -= 2.5;
             }
+            
             break;
         case 'z':
         case 'Z':
             hflapAngle = -12;
-            if(angleA>-30){
-            angleA -= 2.5;
+            if(angleA<30){
+            angleA += 2.5;
             }
             break;
         case 't':
@@ -715,10 +717,12 @@ void funSpecial(int key, int x, int y) {
         // movimiento del submarino en la dirección que mira
         case GLUT_KEY_UP: 
             moveX += speed*sin((angleD-90)*3.141592654/180);
+            moveY += speed*sin(-angleA*3.141592654/180);
             moveZ += speed*cos((angleD-90)*3.141592654/180);
             break;
         case GLUT_KEY_DOWN: 
             moveX -= speed*sin((angleD-90)*3.141592654/180);
+            moveY -= speed*sin(-angleA*3.141592654/180);
             moveZ -= speed*cos((angleD-90)*3.141592654/180);
             break;
         case GLUT_KEY_LEFT: 
@@ -731,14 +735,6 @@ void funSpecial(int key, int x, int y) {
             break;
         default: break;
     }
-    if(moveX>4.0f)
-               moveX=4.0f;
-           else if(moveX<-4.0f)
-               moveX=-4.0f;
-           if(moveZ>4.0f)
-               moveZ=4.0f;
-           else if(moveZ<-4.0f)
-               moveZ=-4.0f;
            
     glutPostRedisplay();
 }
