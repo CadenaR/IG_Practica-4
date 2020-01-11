@@ -516,7 +516,7 @@ void drawHelices(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
 void drawCylinder(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     
-    glm::mat4 RM = glm::rotate(I, (float) (angleB*3.141592654/180), glm::vec3(0.0f, 0.0f, 1.0f));
+    glm::mat4 RM = glm::rotate(I, (float) (angleB*3.141592654/180), glm::vec3(0.0f, 1.0f, 0.0f));
     drawObjectTex(cylinder,texPeriscop,P,V,M*RM); 
 }
 
