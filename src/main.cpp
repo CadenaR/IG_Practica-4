@@ -1,4 +1,5 @@
 #include <iostream>
+#include <math.h> 
 #include <ogl/glew.h>
 #include <ogl/freeglut.h>
 
@@ -52,13 +53,16 @@ float desPeris = 0.0f;
 float moveX = 0.0f;
 float moveY = 0.0f;
 float moveZ = 0.0f;
-int angleD = 0;
-float speed = 0.015f;
-bool setSpeed = false;
+float angleD = 0.0f;
+float speed = 0.0f;
+float nextSpeed = 0.0f;
+float acceleration = 0.0001f;
+float nextPosition = 0.0f;
 int flapAngle = 0;
 int hflapAngle = 0;
 int angleB = 0;
-int angleA = 0;
+float angleA = 0;
+bool started = false;
 float alphaX = 0;
 float alphaY = 0;
 float newX = 0;
@@ -414,7 +418,7 @@ void drawSubmarineAux(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     glm::mat4 RM = glm::rotate(I, (float) (angleD*3.141592654/180), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 RM2 = glm::rotate(I, (float) (angleA*3.141592654/180), glm::vec3(0.0f, 0.0f, 1.0f));
 
-    drawSubmarine(P,V,M*T*RM2*RM);
+    drawSubmarine(P,V,M*T*RM*RM2);
 }
 
 void drawSubmarine(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
@@ -603,16 +607,16 @@ void keyboard(unsigned char key, int x, int y){
         case 'A':
         case 'a':
             hflapAngle = 12;
-            if(angleA>-30){
-            angleA -= 2.5;
+            if(angleA>-30.0){
+            angleA -= 0.8f;
             }
             
             break;
         case 'z':
         case 'Z':
             hflapAngle = -12;
-            if(angleA<30){
-            angleA += 2.5;
+            if(angleA<30.0){
+            angleA += 0.8f;
             }
             break;
         case 't':
@@ -632,18 +636,20 @@ void keyboard(unsigned char key, int x, int y){
             }
             break;
         case 's':
-            if(lightP[0].ambient.x < 1.0f){
+            started = true;
+            /*if(lightP[0].ambient.x < 1.0f){
                 lightP[0].ambient.x += 0.1f;
                 lightP[0].ambient.y += 0.1f;
                 lightP[0].ambient.z += 0.1f;
-            }
+            }*/
             break;
         case 'S':
-            if(lightP[0].ambient.x > 0.0f){
+            started = false;
+            /*if(lightP[0].ambient.x > 0.0f){
                 lightP[0].ambient.x -= 0.1f;
                 lightP[0].ambient.y -= 0.1f;
                 lightP[0].ambient.z -= 0.1f;
-            }
+            }*/
             break;
         case 'l': 
             rotp += 5;
@@ -706,6 +712,31 @@ void timer(int ignore)
     hflapAngle += 1;
     }
     
+    if(started){
+        nextSpeed = speed + acceleration;
+        if(abs(nextSpeed) < 0.015){
+            speed += acceleration;
+        }
+        
+    } else {
+        if(speed > 0.0f){
+            speed -= 0.0001;
+        } else if (speed < 0.0f) {
+            speed += 0.0001;
+        }
+    }
+    nextPosition = sqrt(
+                pow(moveX + speed*sin((angleD-90)*3.141592654/180),2.0f) 
+              + pow(moveY + speed*sin(-angleA*3.141592654/180),2.0f) 
+              + pow(moveZ + speed*cos((angleD-90)*3.141592654/180) ,2.0f));
+    
+    if(nextPosition < 4){
+        moveX += speed*sin((angleD-90)*3.141592654/180);
+        moveY += speed*sin(-angleA*3.141592654/180);
+        moveZ += speed*cos((angleD-90)*3.141592654/180);
+    }
+    
+    
     glutPostRedisplay();
     glutTimerFunc(30, timer, 0);
 }
@@ -716,24 +747,23 @@ void funSpecial(int key, int x, int y) {
     switch(key) {
         // movimiento del submarino en la dirección que mira
         case GLUT_KEY_UP: 
-            moveX += speed*sin((angleD-90)*3.141592654/180);
-            moveY += speed*sin(-angleA*3.141592654/180);
-            moveZ += speed*cos((angleD-90)*3.141592654/180);
+            if(acceleration < 0){
+                acceleration *= -1.0f;
+            }
             break;
         case GLUT_KEY_DOWN: 
-            moveX -= speed*sin((angleD-90)*3.141592654/180);
-            moveY -= speed*sin(-angleA*3.141592654/180);
-            moveZ -= speed*cos((angleD-90)*3.141592654/180);
+            if(acceleration > 0){
+                acceleration *= -1.0f;
+            }
             break;
         case GLUT_KEY_LEFT: 
             flapAngle = -12;
-            angleD += 5;   
+            angleD += 0.5f;   
             break;
         case GLUT_KEY_RIGHT: 
             flapAngle = 12;
-            angleD -= 5;   
+            angleD -= 0.5f;   
             break;
-        default: break;
     }
            
     glutPostRedisplay();
