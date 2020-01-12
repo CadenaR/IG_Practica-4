@@ -196,7 +196,7 @@ void funInit() {
 
     
     // Luz ambiental global
-    lightG.ambient      = glm::vec3(0.001f, 0.001f, 0.001f);
+    lightG.ambient      = glm::vec3(0.01f, 0.01f, 0.01f);
      
  // Luces direccionales
     lightD[0].position  = glm::vec3(0.0f, 4.0f, 0.0f);
@@ -384,9 +384,9 @@ void funDisplay() {
     //glm::vec3 lookat(0.0f, 0.0f,  1.2f);
     
     
-    float x = 5.0f*glm::cos(alphaY)*glm::sin(alphaX);
-    float y = 5.0f*glm::sin(alphaY);
-    float z = 5.0f*glm::cos(alphaY)*glm::cos(alphaX);
+    float x = 10.0f*glm::cos(alphaY)*glm::sin(alphaX);
+    float y = 10.0f*glm::sin(alphaY);
+    float z = 10.0f*glm::cos(alphaY)*glm::cos(alphaX);
     glm::vec3 pos(x,y,z);
     //glm::vec3 pos   (-3.0f, 2.0f, 3.0f);
     glm::vec3 lookat(0.0f, 0.0f,  0.0f);
@@ -418,7 +418,7 @@ void drawObject(Model* object, glm::vec3 color, glm::mat4 P, glm::mat4 V, glm::m
 
 void drawOcean(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
-    glm::mat4 S = glm::scale(I, glm::vec3(2.5f,2.5f,2.5f));
+    glm::mat4 S = glm::scale(I, glm::vec3(5.0f,5.0f,5.0f));
     drawObjectTex(sphere,texOcean,P,V,M*S);
 }
 
@@ -761,9 +761,9 @@ void timer(int ignore)
         
     } else {
         if(speed > 0.0f){
-            speed -= 0.0001;
+            speed -= 0.1;
         } else if (speed < 0.0f) {
-            speed += 0.0001;
+            speed += 0.1;
         }
     }
     nextPosition = sqrt(
@@ -799,11 +799,11 @@ void funSpecial(int key, int x, int y) {
             break;
         case GLUT_KEY_LEFT: 
             flapAngle = -12.0f;
-            angleD += 0.5f;   
+            angleD += 1.0f;   
             break;
         case GLUT_KEY_RIGHT: 
             flapAngle = 12.0f;
-            angleD -= 0.5f;   
+            angleD -= 1.0f;   
             break;
     }
            
