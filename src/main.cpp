@@ -191,7 +191,7 @@ void funInit()
     lightG.ambient = glm::vec3(0.01f, 0.01f, 0.01f);
 
     // Luces direccionales
-    lightD[0].position = glm::vec3(0.0f, 4.0f, 0.0f);
+    lightD[0].position = glm::vec3(0.0f, 5.0f, 0.0f);
     lightD[0].direction = glm::vec3(0.0f, 0.0f, 0.0f);
     lightD[0].ambient = glm::vec3(0.1f, 0.1f, 0.1f);
     lightD[0].diffuse = glm::vec3(0.7f, 0.7f, 0.7f);
