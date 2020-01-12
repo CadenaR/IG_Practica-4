@@ -638,22 +638,21 @@ void keyboard(unsigned char key, int x, int y){
             if(angleC > -120)
                 angleC -= 5.0f;
             break;
+        case 'a':
         case 'A':
             hflapAngle = -12;
             if(angleA<30.0){
                 angleA += 0.8f;
             }
             break;
-        case 'a':
+
+        case 'z':
+        case 'Z':
             hflapAngle = 12;
             if(angleA>-30.0){
                 angleA -= 0.8f;
             }
-            
             break;
-        case 'z':
-        case 'Z':
-
         case 't':
         case 'T':
             if(textureFlap<2)
