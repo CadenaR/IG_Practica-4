@@ -559,7 +559,7 @@ void zoom(int button, int state, int x, int y)
 {
     if (button == 3) //
     {
-        if (fovy > 10)
+        if (fovy > 5)
         {
             fovy -= 1;
         }
@@ -737,7 +737,7 @@ void timer(int ignore)
     nextPosition = sqrt(
         pow(moveX + speed * sin(glm::radians(angleD - 90)), 2.0f) + pow(moveY + speed * sin(glm::radians(-angleA)), 2.0f) + pow(moveZ + speed * cos(glm::radians(angleD - 90)), 2.0f));
 
-    if (nextPosition < 8)
+    if (nextPosition < 8.0f)
     {
         moveX += speed * sin(glm::radians(angleD - 90));
         moveY += speed * sin(glm::radians(-angleA));
