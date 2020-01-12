@@ -25,7 +25,6 @@ void funDestroy();
 void funReshape(int w, int h);
 void funDisplay();
 void funSpecial(int key, int x, int y);
-void drawObject(Model* object, glm::vec3 color, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawOcean (glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawSubmarineAux(glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawSubmarine(glm::mat4 P, glm::mat4 V, glm::mat4 M);
@@ -44,7 +43,6 @@ void timer(int angle);
 void keyboard(unsigned char key, int x, int y);
 void zoom(int button, int state, int x, int y);
 void mouse(int x, int y);
-void move(int key, int x, int y);
 
 void drawObjectMat(Model *object, Material material, glm::mat4 P, glm::mat4 V, glm::mat4 M);
 void drawObjectTex(Model *object, Textures textures, glm::mat4 P, glm::mat4 V, glm::mat4 M);
@@ -58,23 +56,26 @@ float moveZ = 0.0f;
 float angleD = 0.0f;
 float speed = 0.0f;
 float nextSpeed = 0.0f;
-float acceleration = 0.0001f;
+float acceleration = 0.001f;
 float nextPosition = 0.0f;
 float flapAngle = 0.0f;
 float hflapAngle = 0.0f;
 float angleB = 0.0f;
 float angleC = 0.0f;
 float angleA = 0.0f;
+float lX = 0.78f*cos(-angleA*0.0175f+0.25f)*sin((angleD-90)*0.0175f);
+float lY = 0.78f*sin(-angleA*0.0175f+0.25f);
+float lZ = 0.78f*cos(-angleA*0.0175f+0.25f)*cos((angleD-90)*0.0175f);
+float nextLX = 0.0f;
+float nextLY = 0.0f;
+float nextLZ = 0.0f;
 bool started = false;
 float alphaX = 0;
 float alphaY = 0;
 float newX = 0;
 float newY = 0;
-float newAngleX = 0;
-float newAngleY = 0;
 float fovy = 30.0f;
 float rotp = 90.0f;
-bool focal = true;
 float textureFlap = 2;
 
 // Luces
@@ -87,21 +88,14 @@ float textureFlap = 2;
    Light    lightF[NLF];
    
 // Materiales
-   Material matRuby;
-   Material matLuces;
-   Material matEmerald;
    Material matEmeraldTr;
    Material matPerisGlass;
    
 // Texturas
    Texture  *texNoEmissive;
-   Textures texBase;
    Textures texSuelo;
    Textures texGreenSquares;
    Textures texLuces;
-   Textures texCube;
-   Textures texWindow;
-   
    Textures texBodySub;
    Textures texSphereSub;
    Textures texOcean;
@@ -110,8 +104,6 @@ float textureFlap = 2;
    Textures texPeriscop;
    Textures texTopSphere;
 
-
-  
 // Shaders
    Shaders* shaders;
    
@@ -120,7 +112,6 @@ float textureFlap = 2;
    Model* cylinder;
    Model* sphere;
    Model* cylinderNoTop;
-   Model* cube;
 
 // Viewport
    int w = 600;
@@ -192,7 +183,6 @@ void funInit() {
     cylinder = new Model("resources/models/cylinder.obj");
     sphere = new Model("resources/models/sphere.obj");  
     cylinderNoTop = new Model("resources/models/cylinderNoTop.obj");
-    cube = new Model("resources/models/cube.obj");
 
     
     // Luz ambiental global
@@ -207,10 +197,10 @@ void funInit() {
     
 
  // Luces posicionales
-    lightP[0].position  = glm::vec3(0.0f, 4.0f, 0.0f);
-    lightP[0].ambient   = glm::vec3 (0.1f, 0.1f, 0.1f);
-    lightP[0].diffuse   = glm::vec3 (0.9f, 0.9f, 0.9f);
-    lightP[0].specular  = glm::vec3 (0.9f, 0.9f, 0.9f);
+    lightP[0].position  = glm::vec3(lX,lY, lZ);
+    lightP[0].ambient   = glm::vec3 (0.0f, 0.0f, 0.0f);
+    lightP[0].diffuse   = glm::vec3 (0.5f, 0.5f, 0.5f);
+    lightP[0].specular  = glm::vec3 (0.5, 0.5f, 0.5f);
     lightP[0].c0        = 1.000f;
     lightP[0].c1        = 0.220f;
     lightP[0].c2        = 0.200f;
@@ -221,8 +211,8 @@ void funInit() {
     lightF[0].ambient     = glm::vec3(0.5f, 0.5f, 0.5f);
     lightF[0].diffuse     = glm::vec3(0.9f, 0.9f, 0.9f);
     lightF[0].specular    = glm::vec3(0.9f, 0.9f, 0.9f);
-    lightF[0].innerCutOff = 10.0f;
-    lightF[0].outerCutOff = lightF[0].innerCutOff + 5.0f;
+    lightF[0].innerCutOff = 0.0f;
+    lightF[0].outerCutOff = 0.0f;
     lightF[0].c0          = 1.000f;
     lightF[0].c1          = 0.090f;
     lightF[0].c2          = 0.032f;
@@ -235,24 +225,6 @@ void funInit() {
     matPerisGlass.emissive = glm::vec4(0.0f);
     matPerisGlass.shininess = 76.8f;
     
-    matLuces.ambient   = glm::vec4(0.0f,0.0f,0.0f,1.0f);
-    matLuces.diffuse   = glm::vec4(0.0f,0.0f,0.0f,1.0f);
-    matLuces.specular  = glm::vec4(0.0f,0.0f,0.0f,1.0f);
-    matLuces.emissive  = glm::vec4(lightF[0].diffuse,1.0f);
-    matLuces.shininess = 10.0f;
-    
-    matRuby.ambient    = glm::vec4(0.174500f, 0.011750f, 0.011750f, 1.0f);
-    matRuby.diffuse    = glm::vec4(0.614240f, 0.041360f, 0.041360f, 1.0f);
-    matRuby.specular   = glm::vec4(0.727811f, 0.626959f, 0.626959f, 1.0f);
-    matRuby.emissive   = glm::vec4(0.0f);
-    matRuby.shininess  = 76.8f;
-    
-    matEmerald.ambient  = glm::vec4(0.0215f, 0.1745f, 0.0215f, 1.0f);
-    matEmerald.diffuse  = glm::vec4(0.07568f, 0.61424f, 0.07568f, 1.0f);
-    matEmerald.specular = glm::vec4(0.633f, 0.727811f, 0.633f, 1.0f);
-    matEmerald.emissive = glm::vec4(0.0f);
-    matEmerald.shininess= 76.8f;
-    
     matEmeraldTr.ambient  = glm::vec4(0.0215f, 0.1745f, 0.0215f, 0.75f);
     matEmeraldTr.diffuse  = glm::vec4(0.07568f, 0.61424f, 0.07568f, 0.75f);
     matEmeraldTr.specular = glm::vec4(0.633f, 0.727811f, 0.633f, 0.75f);
@@ -261,21 +233,7 @@ void funInit() {
 
  // Texturas
     texNoEmissive      = new Texture("resources/textures/imgNoEmissive.png");
-    
-    texSuelo.diffuse   = new Texture("resources/textures/imgSueloDiffuse.png");    
-    texSuelo.specular  = new Texture("resources/textures/imgSueloSpecular.png");    
-    texSuelo.emissive  = new Texture("resources/textures/imgSueloEmissive.png");
-    texSuelo.normal    = NULL;  
-    texSuelo.shininess = 50.0f;
-    
-
-    texBase.diffuse   = new Texture("resources/textures/imgBaseDiffuse.png");    
-    texBase.specular  = texBase.diffuse; 
-    texBase.emissive  = texNoEmissive;
-    texBase.normal    = NULL;
-    texBase.shininess = 50.0f;
-   
-    
+           
     texGreenSquares.diffuse   = new Texture("resources/textures/imgBrazoDiffuse.png");   
     texGreenSquares.specular  = texGreenSquares.diffuse;
     texGreenSquares.emissive  = texNoEmissive;
@@ -340,14 +298,10 @@ void funDestroy() {
     delete sphere, plane, cylinder, cylinderNoTop;  
     
     delete texNoEmissive;
-    delete texBase.diffuse, texBase.specular, texBase.emissive;
-    delete texSuelo.diffuse, texSuelo.specular, texSuelo.emissive;
     
     delete texGreenSquares.diffuse, texGreenSquares.specular, texGreenSquares.emissive;
     delete texLuces.diffuse, texLuces.specular, texLuces.emissive;
     
-    delete texCube.diffuse, texCube.specular, texCube.emissive;
-    delete texWindow.diffuse, texWindow.specular, texWindow.emissive;
     
 }
 
@@ -405,17 +359,6 @@ void funDisplay() {
 }
 
 
-
-void drawObject(Model* object, glm::vec3 color, glm::mat4 P, glm::mat4 V, glm::mat4 M) {
-    
-    shaders->setMat4("uPVM",P*V*M);
-    glEnable(GL_POLYGON_OFFSET_FILL);
-        shaders->setVec3("uColor",color);
-        object->render(GL_FILL);
-    glDisable(GL_POLYGON_OFFSET_FILL);
-    glColor3ub(1.0f,1.0f,1.0f);
-}
-
 void drawOcean(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 
     glm::mat4 S = glm::scale(I, glm::vec3(2.5f,2.5f,2.5f));
@@ -423,7 +366,7 @@ void drawOcean(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
 }
 
 void drawSubmarineAux(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
-    
+    // Se crean variables de rotación y traslació para todo el submarino
     glm::mat4 T = glm::translate(I, glm::vec3(moveX, moveY, moveZ));
     glm::mat4 RM = glm::rotate(I, glm::radians(angleD), glm::vec3(0.0f, 1.0f, 0.0f));
     glm::mat4 RM2 = glm::rotate(I, glm::radians(angleA), glm::vec3(0.0f, 0.0f, 1.0f));
@@ -435,7 +378,7 @@ void drawSubmarine(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
    
     glm::mat4 S = glm::scale(I, glm::vec3(1.0f,1.0f,0.8f));
     
-    glm::mat4 T = glm::translate(I, glm::vec3(-0.25f, 0.435f, 0.0f));
+    glm::mat4 T = glm::translate(I, glm::vec3(-0.25f, 0.435f, 0.0f));//Posición de periscopio
     
 
     drawFlap(P,V,M);
@@ -465,7 +408,8 @@ void drawFlap(glm::mat4 P, glm::mat4 V, glm::mat4 M){
     glm::mat4 S2 = glm::scale(I, glm::vec3(0.05f,0.3f,0.2f));
     glm::mat4 RM = glm::rotate(I, glm::radians(flapAngle), glm::vec3(0.0f, 0.0f, 1.0f));
     glm::mat4 RMH = glm::rotate(I, glm::radians(hflapAngle), glm::vec3(0.0f, 0.0f, 1.0f));
-
+    
+    //se cargan las texturas segun el caso
     if(textureFlap == 0){
     drawObjectTex(plane,texFlap,P,V,M*T*S2*RMH);
     drawObjectTex(plane,texFlap,P,V,M*T*S*R*RM);
@@ -502,12 +446,12 @@ void drawPeriscopeCylinders(glm::mat4 P, glm::mat4 V, glm::mat4 M) {
     glm::mat4 S = glm::scale(I, glm::vec3(0.01f,0.1f,0.01f));
     glm::mat4 T = glm::translate(I, glm::vec3(0.0f, 0.1f, 0.0f));
     glm::mat4 RM = glm::rotate(I, glm::radians(angleB), glm::vec3(0.0f, 1.0f, 0.0f));
-    drawObjectTex(cylinder,texPeriscop,P,V,M*RM*T*S);
+    drawObjectTex(cylinder,texPeriscop,P,V,M*RM*T*S);//cilinfro base
     glm::mat4 S2 = glm::scale(I, glm::vec3(0.009f,0.025f,0.009f));
     glm::mat4 T2 = glm::translate(I, glm::vec3(0.0f, 0.1f, 0.0f));
     glm::mat4 T3 = glm::translate(I, glm::vec3(0.0f, 0.025f, 0.0f));
     glm::mat4 R = glm::rotate(I, glm::radians(angleC), glm::vec3(0.0f, 0.0f, 1.0f));
-    drawObjectTex(cylinder,texPeriscop,P,V,M*T2*T*RM*R*T3*S2);
+    drawObjectTex(cylinder,texPeriscop,P,V,M*T2*T*RM*R*T3*S2); //cilindro articulado
     drawPeriscopeSphere(P,V,M*T2*T*RM*R);
     drawPeriscopeGlass(P,V,M*T2*T*RM*R);
 }
@@ -589,18 +533,18 @@ void drawObjectTex(Model* object, Textures textures, glm::mat4 P, glm::mat4 V, g
 
 void setLights(glm::mat4 P, glm::mat4 V) {
     
-    float lX = 0.775f*sin(glm::radians(angleD-90));
-    float lY = 0.2f + sin(glm::radians(-angleA));
-    float lZ = 0.775f*cos(glm::radians(angleD-90));
+    //Se calcula la posición con respecto a la cola del submarino
+    lX = -0.775f*cos(-angleA*0.0175f-0.25f)*sin((angleD-90)*0.0175f);
+    lY = -0.775f*sin(-angleA*0.0175f-0.25f);
+    lZ = -0.775f*cos(-angleA*0.0175f-0.25f)*cos((angleD-90)*0.0175f);
     
     shaders->setLight("ulightG",lightG);
     for(int i=0; i<NLD; i++) shaders->setLight("ulightD["+toString(i)+"]",lightD[i]);
     for(int i=0; i<NLP; i++) shaders->setLight("ulightP["+toString(i)+"]",lightP[i]);    
     for(int i=0; i<NLF; i++) shaders->setLight("ulightF["+toString(i)+"]",lightF[i]);
     
-    glm::mat4 M = glm::scale(glm::translate(I,lightF[0].position),glm::vec3(0.025f));
-    lightF[0].position    = glm::vec3(lX, lY, lZ);
-    lightF[0].direction   = glm::vec3(lX, lY-0.2f, lZ);
+    glm::mat4 M = glm::scale(glm::translate(I,lightP[0].position),glm::vec3(0.025f));
+    lightP[0].position  = glm::vec3(lX+moveX, lY+moveY, lZ+moveZ);
     drawObjectTex(sphere,texLuces,P,V,M);
     
     
@@ -624,12 +568,14 @@ void zoom(int button, int state, int x, int y){
 
 void keyboard(unsigned char key, int x, int y){
     switch(key){
+        //Rotación de todo el periscopio
         case 'B':
             angleB -= 5.0f;
             break;
         case 'b':
             angleB += 5.0f;
             break;
+        // rotación articulada de segundo cilindro
         case 'o':
             if(angleC < 120)
                 angleC += 5.0f;
@@ -638,69 +584,63 @@ void keyboard(unsigned char key, int x, int y){
             if(angleC > -120)
                 angleC -= 5.0f;
             break;
-        case 'A':
-            hflapAngle = -12;
-            if(angleA<30.0){
-                angleA += 0.8f;
-            }
-            break;
+        // subir submarino
         case 'a':
             hflapAngle = 12;
             if(angleA>-30.0){
                 angleA -= 0.8f;
             }
-            
             break;
+        // bajar submarino
         case 'z':
-        case 'Z':
-
-        case 't':
+            hflapAngle = -12;
+            if(angleA<30.0){
+                angleA += 0.8f;
+            }
+            break;
+        // cambiar textura
         case 'T':
             if(textureFlap<2)
             textureFlap +=1;
             else textureFlap = 0;
             break;
+        // Sacar periscopio
         case 'P':
             if(desPeris > 0.0){
                 desPeris -= 0.005;
             }
             break;
+        //meter periscopio
         case 'p':
             if(desPeris<0.165){
                 desPeris += 0.005;
             }
             break;
+        //encender submarino    
         case 's':
             started = true;
-            /*if(lightP[0].ambient.x < 1.0f){
+            break;
+        //apagar submarino
+        case 'S':
+            started = false;
+            break;
+        //aumentar luz
+        case 'l':
+            if(lightP[0].ambient.x < 1.0f){
                 lightP[0].ambient.x += 0.1f;
                 lightP[0].ambient.y += 0.1f;
                 lightP[0].ambient.z += 0.1f;
-            }*/
+            }
             break;
-        case 'S':
-            started = false;
-            /*if(lightP[0].ambient.x > 0.0f){
+        //disminuir luz
+        case 'L':
+            
+            if(lightP[0].ambient.x > 0.0f){
                 lightP[0].ambient.x -= 0.1f;
                 lightP[0].ambient.y -= 0.1f;
                 lightP[0].ambient.z -= 0.1f;
-            }*/
-            break;
-        case 'l': 
-            rotp += 5;
-            break;
-        case 'f':
-            if(focal){
-                focal = false;
-                lightF[0].innerCutOff = 0.0f;
-                lightF[0].outerCutOff = 0.0f;
-            } else {
-                focal = true;
-                lightF[0].innerCutOff = 10.0f;
-                lightF[0].outerCutOff = lightF[0].innerCutOff + 5.0f;
             }
             break;
-        default: break;
     }
         glutPostRedisplay();
         //glutKeyboardFunc(keyboard);
@@ -767,6 +707,8 @@ void timer(int ignore)
             speed += 0.0001;
         }
     }
+    
+    //se revisa que la próxima posición no avance mas del límite
     nextPosition = sqrt(
                 pow(moveX + speed*sin(glm::radians(angleD-90)),2.0f) 
               + pow(moveY + speed*sin(glm::radians(-angleA)),2.0f) 
@@ -776,6 +718,7 @@ void timer(int ignore)
         moveX += speed*sin(glm::radians(angleD-90));
         moveY += speed*sin(glm::radians(-angleA));
         moveZ += speed*cos(glm::radians(angleD-90));
+
     }
     
     
@@ -793,15 +736,18 @@ void funSpecial(int key, int x, int y) {
                 acceleration *= -1.0f;
             }
             break;
+        //movimiento del submarino en la dirección contraria a la que mira
         case GLUT_KEY_DOWN: 
             if(acceleration > 0){
                 acceleration *= -1.0f;
             }
             break;
+        //girar izquierda
         case GLUT_KEY_LEFT: 
             flapAngle = -12.0f;
             angleD += 0.5f;   
             break;
+        //girar derecha
         case GLUT_KEY_RIGHT: 
             flapAngle = 12.0f;
             angleD -= 0.5f;   
