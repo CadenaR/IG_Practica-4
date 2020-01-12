@@ -56,7 +56,7 @@ float moveZ = 0.0f;
 float angleD = 0.0f;
 float speed = 0.0f;
 float nextSpeed = 0.0f;
-float acceleration = 0.001f;
+float acceleration = 0.0001f;
 float nextPosition = 0.0f;
 float flapAngle = 0.0f;
 float hflapAngle = 0.0f;
@@ -596,6 +596,7 @@ void keyboard(unsigned char key, int x, int y)
         break;
     // subir submarino
     case 'a':
+    case 'A':
         hflapAngle = 12;
         if (angleA > -30.0)
         {
@@ -604,6 +605,7 @@ void keyboard(unsigned char key, int x, int y)
         break;
     // bajar submarino
     case 'z':
+    case 'Z':
         hflapAngle = -12;
         if (angleA < 30.0)
         {
@@ -611,6 +613,7 @@ void keyboard(unsigned char key, int x, int y)
         }
         break;
     // cambiar textura
+    case 't':
     case 'T':
         if (textureFlap < 2)
             textureFlap += 1;
@@ -734,7 +737,7 @@ void timer(int ignore)
     nextPosition = sqrt(
         pow(moveX + speed * sin(glm::radians(angleD - 90)), 2.0f) + pow(moveY + speed * sin(glm::radians(-angleA)), 2.0f) + pow(moveZ + speed * cos(glm::radians(angleD - 90)), 2.0f));
 
-    if (nextPosition < 4)
+    if (nextPosition < 8)
     {
         moveX += speed * sin(glm::radians(angleD - 90));
         moveY += speed * sin(glm::radians(-angleA));
