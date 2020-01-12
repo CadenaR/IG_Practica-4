@@ -550,9 +550,8 @@ void setLights(glm::mat4 P, glm::mat4 V)
         shaders->setLight("ulightP[" + toString(i) + "]", lightP[i]);
     for (int i = 0; i < NLF; i++)
         shaders->setLight("ulightF[" + toString(i) + "]", lightF[i]);
-
-    glm::mat4 M = glm::scale(glm::translate(I, lightP[0].position), glm::vec3(0.025f));
     lightP[0].position = glm::vec3(lX + moveX, lY + moveY, lZ + moveZ);
+    glm::mat4 M = glm::scale(glm::translate(I, lightP[0].position), glm::vec3(0.025f));
     drawObjectTex(sphere, texLuces, P, V, M);
 }
 
@@ -717,23 +716,17 @@ void timer(int ignore)
         hflapAngle += 1.0f;
     }
 
-    if (started)
-    {
+    if(started){
         nextSpeed = speed + acceleration;
-        if (abs(nextSpeed) < 0.015)
-        {
+        if(abs(nextSpeed) < 0.015){
             speed += acceleration;
         }
-    }
-    else
-    {
-        if (speed > 0.0f)
-        {
-            speed -= 0.1;
-        }
-        else if (speed < 0.0f)
-        {
-            speed += 0.1;
+        
+    } else {
+        if(speed > 0.0f){
+            speed -= 0.0001;
+        } else if (speed < 0.0f) {
+            speed += 0.0001;
         }
     }
 
